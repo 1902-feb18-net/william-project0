@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 /// <summary>
 /// Requirements for p0
@@ -18,8 +19,10 @@ namespace ComputerLib.Library
         private string _lastName;
         private int _localStoreId;
 
+        [XmlAttribute]
         public int ID { get; set; }
 
+        [XmlAttribute("First Name")]
         public string FirstName
         {
             get => _firstName;
@@ -33,6 +36,7 @@ namespace ComputerLib.Library
             }
         }
 
+        [XmlAttribute("Last Name")]
         public string LastName
         {
             get => _lastName;
@@ -45,7 +49,7 @@ namespace ComputerLib.Library
                 _lastName = value;
             }
         }
-
+        [XmlAttribute("Local Store")]
         public int LocalStoreId
         {
             get => _localStoreId;
@@ -55,5 +59,7 @@ namespace ComputerLib.Library
             }
             
         }
+
+        public List<Order> orderHistory = new List<Order>();
     }
 }

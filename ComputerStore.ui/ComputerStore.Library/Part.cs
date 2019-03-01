@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ComputerLib.Library
 {
-    class Part
+    public class Part
     {
         private string _partName;
         private int _partCost;
+        private int _inventory;
 
+        [XmlAttribute]
         public int Id { get; set; }
+
+        [XmlAttribute("Name")]
         public string Name
         {
             get => _partName;
@@ -24,6 +29,8 @@ namespace ComputerLib.Library
                 _partName = value;
             }
         }
+
+        [XmlAttribute("Cost")]
         public int Cost
         {
             get => _partCost;
@@ -32,5 +39,15 @@ namespace ComputerLib.Library
                 _partCost = value;
             }
         }
+
+        [XmlAttribute("Inventory Carried")]
+        public int Inventory
+        {
+            get => _inventory;
+            set
+            {
+                _inventory = value;
+            }
+        }
     }
-}
+} 

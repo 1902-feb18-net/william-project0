@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 /// <summary>
 /// Requirements for p0
@@ -13,12 +14,14 @@ using System.Threading.Tasks;
 /// </summary>
 namespace ComputerLib.Library
 {
-    class Store
+    public class Store
     {
         private string _location;
 
+        [XmlAttribute]
         public int Id { get; set; }
 
+        [XmlAttribute("Store Name")]
         public string Location
         {
             get => _location;
@@ -31,5 +34,7 @@ namespace ComputerLib.Library
                 _location = value;
             }
         }
+
+        public List<Order> orderHistory = new List<Order>();
     }
 }

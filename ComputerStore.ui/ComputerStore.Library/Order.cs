@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 
 /// <summary>
@@ -12,14 +13,21 @@ using System.Threading.Tasks;
 /// </summary>
 namespace ComputerLib.Library
 {
-    class Order
+    public class Order
     {
         private int _total;
         private DateTime _date;
 
+        [XmlAttribute]
         public int Id { get; set; }
+
+        [XmlAttribute("Store")]
         public int StoreId { get; set; }
+
+        [XmlAttribute("Customer")]
         public int CustomerId { get; set; }
+
+        [XmlAttribute("Total Price")]
         public int Total
         {
             get => _total;
@@ -28,6 +36,8 @@ namespace ComputerLib.Library
                 _total = value;
             }
         }
+
+        [XmlAttribute("Time")]
         public DateTime Date
         {
             get => _date;
