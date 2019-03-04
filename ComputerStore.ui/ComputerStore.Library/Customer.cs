@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 /// <summary>
 /// Requirements for p0
@@ -11,18 +10,18 @@ using System.Xml.Serialization;
 /// default store
 /// cannot place orders from same location per 2hrs
 /// </summary>
-namespace ComputerLib.Library
+namespace ComputerStore.Library
 {
     public class Customer
     {
         private string _firstName;
         private string _lastName;
-        private int _localStoreId;
+        private string _address;
+        private string _phoneNumber;
+        private int _storeId;
 
-        [XmlAttribute]
         public int ID { get; set; }
 
-        [XmlAttribute("First Name")]
         public string FirstName
         {
             get => _firstName;
@@ -36,7 +35,6 @@ namespace ComputerLib.Library
             }
         }
 
-        [XmlAttribute("Last Name")]
         public string LastName
         {
             get => _lastName;
@@ -49,17 +47,32 @@ namespace ComputerLib.Library
                 _lastName = value;
             }
         }
-        [XmlAttribute("Local Store")]
-        public int LocalStoreId
+
+        public string Address
         {
-            get => _localStoreId;
+            get => _address;
             set
             {
-                _localStoreId = value;
+                _address = value;
+            }
+        }
+
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set
+            {
+                _phoneNumber = value;
+            }
+        }
+        public int StoreId
+        {
+            get => _storeId;
+            set
+            {
+                _storeId = value;
             }
             
         }
-
-        public List<Order> orderHistory = new List<Order>();
     }
 }

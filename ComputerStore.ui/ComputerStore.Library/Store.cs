@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 /// <summary>
 /// Requirements for p0
@@ -12,29 +11,35 @@ using System.Xml.Serialization;
 /// at least 1 product needs complexity to its order -ex computer = cpu, mb, case, gpu etc-
 /// order history
 /// </summary>
-namespace ComputerLib.Library
+namespace ComputerStore.Library
 {
     public class Store
     {
-        private string _location;
+        private string _address;
+        private string _name;
 
-        [XmlAttribute]
         public int Id { get; set; }
 
-        [XmlAttribute("Store Name")]
-        public string Location
+        public string Address
         {
-            get => _location;
+            get => _address;
             set
             {
-                if(value.Length == 0)
-                {
-                    throw new ArgumentException("Location name must not be empty", nameof(value));
-                }
-                _location = value;
+                _address = value;
             }
         }
 
-        public List<Order> orderHistory = new List<Order>();
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value.Length == 0)
+                {
+                    throw new ArgumentException("Name must not be empty!", nameof(value));
+                }
+                _name = value;
+            }
+        }
     }
 }
