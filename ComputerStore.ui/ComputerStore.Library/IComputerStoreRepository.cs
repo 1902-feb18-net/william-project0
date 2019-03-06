@@ -26,6 +26,26 @@ namespace ComputerStore.Library
         void DeleteOrder(int orderID);
         void UpdateOrder(OrderItem order);
 
+        IEnumerable<OrderBatch> GetOrderBatches();
+        void AddOrderBatch(OrderBatch orderBatch);
+        void DeleteOrderBatch(int orderBatchID);
+        void UpdateOrderBatch(OrderBatch orderBatch);
+
+        IEnumerable<Inventory> GetInventories();
+        void AddInventory(Inventory inventory);
+        void DeleteInventory(int inventoryID);
+        void UpdateInventory(Inventory inventory);
+
+        IEnumerable<ProductGroup> GetProductGroups();
+        void AddProductGroup(ProductGroup productGroup);
+        void DeleteProductGroup(int productGroupID);
+        void UpdateProductGroup(ProductGroup productGroup);
+
+        IEnumerable<SubProduct> GetSubProducts();
+        void AddSubProduct(SubProduct subProduct);
+        void DeleteSubProduct(int subProductID);
+        void UpdateSubProduct(SubProduct subProduct);
+
         void Save();
     }
 }

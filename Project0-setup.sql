@@ -1,4 +1,6 @@
 -- Project0 Table setup
+select * from Customer
+select * from Store
 -- Adds store location
 create table Store (
 	ID int not null primary key identity,
