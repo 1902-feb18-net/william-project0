@@ -576,8 +576,8 @@ namespace ComputerStore.ui
                         }
                         break;
                     case "2":
-                        //Customer Menu
-                        CustomerMenu:
+                    //Customer Menu
+                    CustomerMenu:
                         Console.Clear();
                         Console.WriteLine("Customer Menu\n" +
                             "\t 1. Add new customer\n" +
@@ -593,10 +593,9 @@ namespace ComputerStore.ui
                                 while (customerAdd.FirstName == null)
                                 {
                                     Console.WriteLine("Enter First Name: ");
-                                    var input = Console.ReadLine();
                                     try
                                     {
-                                        customerAdd.FirstName = input;
+                                        customerAdd.FirstName = Console.ReadLine();
                                     }
                                     catch (ArgumentException ex)
                                     {
@@ -607,10 +606,9 @@ namespace ComputerStore.ui
                                 while (customerAdd.LastName == null)
                                 {
                                     Console.WriteLine("Enter Last Name: ");
-                                    var input = Console.ReadLine();
                                     try
                                     {
-                                        customerAdd.LastName = input;
+                                        customerAdd.LastName = Console.ReadLine();
                                     }
                                     catch (ArgumentException ex)
                                     {
@@ -634,13 +632,14 @@ namespace ComputerStore.ui
                                             var store = stores[ii - 1];
                                             Console.WriteLine($"\t {ii}. {store.Name}");
                                         }
-                                        var input = Console.ReadLine();
-                                        if (int.TryParse(input, out var storeNum) && storeNum > 0 && storeNum <= stores.Count)
+                                        var line = Console.ReadLine();
+                                        if (int.TryParse(line, out var storeNum) && storeNum > 0 && storeNum <= stores.Count)
                                         {
                                             var store = stores[storeNum - 1];
                                             customerAdd.StoreId = store.Id;
                                             computerStoreRepository.AddCustomer(customerAdd);
                                             computerStoreRepository.Save();
+                                            goto CustomerMenu;
                                         }
                                         else
                                         {
@@ -656,12 +655,17 @@ namespace ComputerStore.ui
                                 Console.Clear();
                                 Console.WriteLine("Enter Customer's FirstName, LastName");
                                 var input = Console.ReadLine();
-                                input.Remove(' ');
-                                var name = input.Split(',');
+                                if (!input.Contains(","))
+                                {
+                                    Console.WriteLine("Incorrect Formatting. Press enter to continue");
+                                    Console.ReadLine();
+                                    goto CustomerMenu;
+                                }
+                                input = input.Replace(" ", string.Empty);
+                                string[] name = input.Split(',');
                                 var customerSearch = (from cus in dbContext.Customer
                                                       join sto in dbContext.Store on cus.StoreId equals sto.Id
-                                                    where cus.FirstName == name[0] &&
-                                                    cus.LastName == name[1]
+                                                    where cus.FirstName == name[0] && cus.LastName == name[1]
                                                     select new
                                                     {
                                                         ID = cus.Id,
@@ -674,7 +678,9 @@ namespace ComputerStore.ui
                                                     }).ToList();
                                 if(customerSearch.Count == 0)
                                 {
-                                    Console.WriteLine("Could not find a customer by that name.");
+                                    Console.WriteLine("Could not find a customer by that name. Press enter to continue");
+                                    Console.ReadLine();
+                                    goto CustomerMenu;
                                 }
                                 while(customerSearch.Count > 0)
                                 {
@@ -703,6 +709,9 @@ namespace ComputerStore.ui
                                         {
                                             case "1":
                                                 //change name
+                                                customerNew.Address = customerSearch[cusNum - 1].Address;
+                                                customerNew.PhoneNumber = customerSearch[cusNum - 1].PhoneNumber;
+                                                customerNew.StoreId = customerSearch[cusNum - 1].StoreId;
                                                 while (customerNew.FirstName == null)
                                                 {
                                                     Console.WriteLine("Enter new FirstName");
@@ -732,6 +741,10 @@ namespace ComputerStore.ui
                                                 break;
                                             case "2":
                                                 //change address
+                                                customerNew.FirstName = customerSearch[cusNum - 1].FirstName;
+                                                customerNew.LastName = customerSearch[cusNum - 1].LastName;
+                                                customerNew.PhoneNumber = customerSearch[cusNum - 1].PhoneNumber;
+                                                customerNew.StoreId = customerSearch[cusNum - 1].StoreId;
                                                 while(customerNew.Address == null)
                                                 {
                                                     Console.WriteLine("Enter new address");
@@ -749,6 +762,10 @@ namespace ComputerStore.ui
                                                 break;
                                             case "3":
                                                 //change phone number
+                                                customerNew.FirstName = customerSearch[cusNum - 1].FirstName;
+                                                customerNew.LastName = customerSearch[cusNum - 1].LastName;
+                                                customerNew.Address = customerSearch[cusNum - 1].Address;
+                                                customerNew.StoreId = customerSearch[cusNum - 1].StoreId;
                                                 while(customerNew.PhoneNumber == null)
                                                 {
                                                     Console.WriteLine("Enter new phone number");
@@ -766,10 +783,40 @@ namespace ComputerStore.ui
                                                 break;
                                             case "4":
                                                 //change default store
+                                                customerNew.FirstName = customerSearch[cusNum - 1].FirstName;
+                                                customerNew.LastName = customerSearch[cusNum - 1].LastName;
+                                                customerNew.Address = customerSearch[cusNum - 1].Address;
+                                                customerNew.PhoneNumber = customerSearch[cusNum - 1].PhoneNumber;
                                                 while(customerNew.StoreId == 0)
                                                 {
-
+                                                    if(locations.Count == 0)
+                                                    {
+                                                        Console.WriteLine("No available Stores");
+                                                    }
+                                                    while(locations.Count > 0)
+                                                    {
+                                                        for (int ii = 1; ii <= locations.Count; ii++)
+                                                        {
+                                                            var store = locations[ii - 1];
+                                                            Console.WriteLine($" {ii}. {store.Name}");
+                                                        }
+                                                        Console.WriteLine("Select an option above");
+                                                        input = Console.ReadLine();
+                                                        if (int.TryParse(input, out var stoNum) && stoNum > 0 && stoNum <= locations.Count)
+                                                        {
+                                                            var store = locations[stoNum - 1];
+                                                            customerNew.StoreId = store.Id;
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                                            Console.ReadLine();
+                                                        }
+                                                    }
                                                 }
+                                                computerStoreRepository.UpdateCustomer(customerNew);
+                                                computerStoreRepository.Save();
                                                 break;
                                             case "b":
                                                 goto CustomerMenu;
@@ -779,8 +826,15 @@ namespace ComputerStore.ui
                                                 goto CustomerOptions;
                                         }
                                     }
-
-
+                                    else if(input == "b")
+                                    {
+                                        goto CustomerMenu;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                        Console.ReadLine();
+                                    }
                                 }
 
                                 break;
