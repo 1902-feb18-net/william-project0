@@ -1,7 +1,9 @@
 ﻿using ComputerStore.Context;
 using ComputerStore.Library;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CSC = ComputerStore.Context;
 
@@ -9,10 +11,13 @@ namespace ComputerStore.ui
 {
     class Program
     {
+      // public static readonly LoggerFactory AppLoggerFactory =
+      //     new LoggerFactory(new[] {new ConsoleLoggerProvider((_,__) => true,true) });
         static void Main(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<CSC.Project0Context>();
             optionsBuilder.UseSqlServer(SecretConfiguration.ConnectionString);
+      //      optionsBuilder.UseLoggerFactory(AppLoggerFactory);
             var options = optionsBuilder.Options;
 
             var dbContext = new CSC.Project0Context(options);
@@ -75,10 +80,10 @@ namespace ComputerStore.ui
                                 }
                                 while (stores.Count > 0)
                                 {
-                                    for(int ii = 1; ii <= stores.Count; ii++)
+                                    Console.Clear();
+                                    for (int ii = 1; ii <= stores.Count; ii++)
                                     {
                                         var store = stores[ii - 1];
-                                        Console.Clear();
                                         Console.WriteLine($"\t{ii}. {store.Name}\n");
                                     }
                                     Console.WriteLine("Select an option above or 'b' to go back");
@@ -847,7 +852,7 @@ namespace ComputerStore.ui
                         }
                         break;
                     case "3":
-                    //insert Order Menu
+                    //Order Menu
                     OrderMenu:
                         Console.Clear();
                         Console.WriteLine("Order Menu\n" +
@@ -859,12 +864,449 @@ namespace ComputerStore.ui
                         {
                             case "1":
                                 //insert Place order
+                                var cart = new List<Library.OrderItem>();
+                                var products = computerStoreRepository.GetProducts().ToList();
+                                var locations = computerStoreRepository.GetStores().ToList();
+                                Console.Clear();
+                                Console.WriteLine("Enter Customer's FirstName, LastName");
+                                var input = Console.ReadLine();
+                                if (!input.Contains(","))
+                                {
+                                    Console.WriteLine("Incorrect Formatting. Press enter to continue");
+                                    Console.ReadLine();
+                                    goto OrderMenu;
+                                }
+                                input = input.Replace(" ", string.Empty);
+                                string[] name = input.Split(',');
+                                var customerSearch = (from cus in dbContext.Customer
+                                                      join sto in dbContext.Store on cus.StoreId equals sto.Id
+                                                      where cus.FirstName == name[0] && cus.LastName == name[1]
+                                                      select new
+                                                      {
+                                                          ID = cus.Id,
+                                                          FirstName = cus.FirstName,
+                                                          LastName = cus.LastName,
+                                                          Address = cus.Address,
+                                                          PhoneNumber = cus.PhoneNumber,
+                                                          StoreName = sto.Name,
+                                                          StoreId = sto.Id
+                                                      }).ToList();
+                                   
+                                if (customerSearch.Count == 0)
+                                {
+                                    Console.WriteLine("Could not find a customer by that name. Press enter to continue");
+                                    Console.ReadLine();
+                                    goto CustomerMenu;
+                                }
+                                while (customerSearch.Count > 0)
+                                {
+                                    Console.Clear();
+                                    for (int ii = 1; ii <= customerSearch.Count; ii++)
+                                    {
+                                        var customer = customerSearch[ii - 1];
+                                        Console.WriteLine($" {ii}. {customer.FirstName}, {customer.LastName}");
+                                    }
+                                    Console.WriteLine("Select an option above to edit or press 'b' to go back");
+                                    input = Console.ReadLine();
+                                    if (int.TryParse(input, out var cusNum) && cusNum > 0 && cusNum <= customerSearch.Count)
+                                    {
+                                    OrderOptions:
+                                        Console.Clear();
+                                        var pros = computerStoreRepository.GetProducts().ToList();
+                                        var curBatchId = computerStoreRepository.GetOrderBatches().ToList().Last().Id + 1;
+                                        var curItemId = computerStoreRepository.GetOrders().ToList().Last().Id + 1;
+                                        decimal totalCost = 0;
+                                        if( pros.Count == 0)
+                                        {
+                                            Console.WriteLine("No available products");
+                                            goto OrderMenu;
+                                        }
+                                        while ( pros.Count > 0)
+                                        {
+                                            var orderBatchAdd = new Library.OrderBatch();
+                                            var orderItemAdd = new Library.OrderItem();
+                                            var inventoryUp = new Library.Inventory();
+                                            Console.Clear();
+                                            for(int ii = 1; ii <= pros.Count; ii++)
+                                            {
+                                                var pro = pros[ii - 1];
+                                                Console.WriteLine($" {ii}. {pro.Name}, {pro.Cost}");
+                                            }
+                                            Console.WriteLine($"\nCurrent Cart: Total ${totalCost}");
+                                            for(int ii = 0; ii < cart.Count; ii++)
+                                            {
+                                                Console.WriteLine($" {cart[ii].Name}, {cart[ii].Quantity}, {cart[ii].Cost}");
+                                            }
+                                            Console.WriteLine("Select an option above to add to cart or press 'b' to go back or 'c' to checkout");
+                                            input = Console.ReadLine();
+                                            if (int.TryParse(input, out var proNum) && proNum > 0 && proNum <= pros.Count)
+                                            {
+                                                var invSearch = (from inv in dbContext.Inventory
+                                                                 join sto in dbContext.Store on inv.StoreId equals sto.Id
+                                                                 join pro in dbContext.ProductGroup on inv.SubProductId equals pro.SubProductId
+                                                                 where sto.Id == customerSearch[cusNum - 1].StoreId && pro.Id == pros[proNum -1].Id
+                                                                 select new
+                                                                 {
+                                                                     ID = inv.Id,
+                                                                     Quantity = inv.Quantity,
+                                                                     StoreID = inv.StoreId,
+                                                                     SubProductID = inv.SubProductId
+                                                                 }).ToList();
+                                                inventoryUp.Quantity = invSearch[0].Quantity;
+                                                orderItemAdd.ProductId = pros[proNum - 1].Id;
+                                                orderItemAdd.Name = pros[proNum - 1].Name;
+                                                Console.WriteLine("Enter amount: ");
+                                                input = Console.ReadLine().ToLower();
+                                                int temp;
+                                                var num = int.TryParse(input, out temp) ? int.Parse(input) : (int?)null;
+                                                if (num == null)
+                                                {
+                                                    Console.WriteLine("Invalid input. Press enter to continue");
+                                                    Console.ReadLine();
+                                                }
+                                                else if (!inventoryUp.CheckAvail(invSearch[0].Quantity))
+                                                {
+                                                    Console.WriteLine("Not enough iventory available. Press enter to continue");
+                                                    Console.ReadLine();
+                                                    goto OrderOptions;
+                                                }
+                                                else
+                                                {
+                                                    try
+                                                    {
+                                                        orderItemAdd.Quantity = (int)num;
+                                                    }
+                                                    catch (ArgumentException ex)
+                                                    {
+                                                        Console.WriteLine(ex.Message);
+                                                    }
+                                                    //inventory update
+                                                    inventoryUp.Id = invSearch[0].ID;
+                                                    inventoryUp.Quantity -= (int)num;
+                                                    inventoryUp.StoreId = invSearch[0].StoreID;
+                                                    inventoryUp.SubProductId = invSearch[0].SubProductID;
+                                                    computerStoreRepository.UpdateInventory(inventoryUp);
+                                                    //order batch add
+                                                    orderBatchAdd.CustomerId = customerSearch[0].ID;
+                                                    orderBatchAdd.StoreId = customerSearch[0].StoreId;
+                                                    orderBatchAdd.Id = curBatchId;
+                                                    curBatchId++;
+                                                    //order item add
+                                                    orderItemAdd.Cost = orderItemAdd.Quantity * pros[proNum - 1].Cost;
+                                                    orderItemAdd.BatchId = orderBatchAdd.Id;
+                                                    orderItemAdd.Id = curItemId;
+                                                    curItemId++;
+                                                    totalCost += orderItemAdd.Cost;
+                                                    cart.Add(orderItemAdd);
+                                                    computerStoreRepository.AddOrderBatch(orderBatchAdd);
+                                                    computerStoreRepository.AddOrder(orderItemAdd);
+                                                }
+                                            }
+                                            else if (input == "b")
+                                            {
+                                                goto OrderMenu;
+                                            }
+                                            else if(input == "c")
+                                            {
+                                                //checkout
+                                                computerStoreRepository.Save();
+                                                goto OrderMenu;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                                Console.ReadLine();
+                                                goto OrderOptions;
+                                            }
+
+
+                                        }
+
+                                    }
+                                    else if (input == "b")
+                                    {
+                                        goto OrderMenu;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                        Console.ReadLine();
+                                    }
+                                }
                                 break;
                             case "2":
-                                //insert List by Customer
+                            //List by Customer
+                            OrderCustomer:
+                                var customers = computerStoreRepository.GetCustomers().ToList();
+                                var orders = computerStoreRepository.GetOrders().ToList();
+                                if(customers.Count == 0)
+                                {
+                                    Console.WriteLine("No available customers");
+                                    goto OrderMenu;
+                                }
+                                while(customers.Count > 0)
+                                {
+                                    Console.Clear();
+                                    for(int ii = 1; ii <= customers.Count; ii++)
+                                    {
+                                        var customer = customers[ii - 1];
+                                        Console.WriteLine($"{ii}. {customer.FirstName}, {customer.LastName}");
+                                    }
+                                    Console.WriteLine("Select an option above or press 'b' to go back");
+                                    input = Console.ReadLine();
+                                    if (int.TryParse(input, out var cusNum) && cusNum > 0 && cusNum <= customers.Count)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Choose Sort Type\n" +
+                                            "\t 1. Price Ascending\n" +
+                                            "\t 2. Price Descending\n" +
+                                            "\t 3. Most Recent\n" +
+                                            "\t 4. Oldest\n" +
+                                            "Select an option above or press 'b' to go back");
+                                        switch (Console.ReadLine().ToLower())
+                                        {
+                                            case "1":
+                                                //insert p asc
+                                                var cAsc = (from sto in dbContext.Store
+                                                            join oBat in dbContext.OrderBatch on sto.Id equals oBat.StoreId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.CustomerId == customers[cusNum - 1].ID
+                                                            orderby oItem.Cost
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                Sto = sto.Name
+                                                            }).ToList();
+                                                for(int ii = 1; ii <= cAsc.Count; ii++)
+                                                {
+                                                    var line = cAsc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.Name}, {line.Cost}, {line.Sto}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "2":
+                                                //insert p desc
+                                                var cDesc = (from sto in dbContext.Store
+                                                            join oBat in dbContext.OrderBatch on sto.Id equals oBat.StoreId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                             where oBat.CustomerId == customers[cusNum - 1].ID
+                                                             orderby oItem.Cost descending
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                Sto = sto.Name
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= cDesc.Count; ii++)
+                                                {
+                                                    var line = cDesc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.Name}, {line.Cost}, {line.Sto}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "3":
+                                                //insert date desc
+                                                var dDesc = (from sto in dbContext.Store
+                                                            join oBat in dbContext.OrderBatch on sto.Id equals oBat.StoreId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                             where oBat.CustomerId == customers[cusNum - 1].ID
+                                                             orderby oBat.TimePlaced descending
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                Sto = sto.Name
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= dDesc.Count; ii++)
+                                                {
+                                                    var line = dDesc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.Name}, {line.Cost}, {line.Sto}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "4":
+                                                //insert date asc
+                                                var dAsc = (from sto in dbContext.Store
+                                                            join oBat in dbContext.OrderBatch on sto.Id equals oBat.StoreId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.CustomerId == customers[cusNum - 1].ID
+                                                            orderby oBat.TimePlaced
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                Sto = sto.Name
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= dAsc.Count; ii++)
+                                                {
+                                                    var line = dAsc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.Name}, {line.Cost}, {line.Sto}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "b":
+                                                goto OrderMenu;
+                                            default:
+                                                Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                                Console.ReadLine();
+                                                goto OrderCustomer;
+                                        }
+                                    }
+                                    else if(input == "b")
+                                    {
+                                        goto OrderMenu;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                        Console.ReadLine();
+                                    }
+                                }
                                 break;
                             case "3":
-                                //insert List by Store
+                                //List by Store
+                                var stores = computerStoreRepository.GetStores().ToList();
+                                if(stores.Count == 0)
+                                {
+                                    Console.WriteLine("No available stores");
+                                    goto OrderMenu;
+                                }
+                                while(stores.Count > 0)
+                                {
+                                    for (int ii = 1; ii <= stores.Count; ii++)
+                                    {
+                                        var store = stores[ii - 1];
+                                        Console.WriteLine($"{ii}. {store.Name}");
+                                    }
+                                    Console.WriteLine("Select an option above or press 'b' to go back");
+                                    input = Console.ReadLine();
+                                    if (int.TryParse(input, out var stoNum) && stoNum > 0 && stoNum <= stores.Count)
+                                    {
+                                        OrderStore:
+                                        Console.Clear();
+                                        Console.WriteLine("Choose Sort Type\n" +
+                                            "\t 1. Price Ascending\n" +
+                                            "\t 2. Price Descending\n" +
+                                            "\t 3. Most Recent\n" +
+                                            "\t 4. Oldest\n" +
+                                            "Select an option above or press 'b' to go back");
+                                        switch (Console.ReadLine().ToLower())
+                                        {
+                                            case "1":
+                                                //insert p asc
+                                                var cAsc = (from cus in dbContext.Customer
+                                                            join oBat in dbContext.OrderBatch on cus.Id equals oBat.CustomerId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.StoreId == stores[stoNum - 1].Id
+                                                            orderby oItem.Cost
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                FirstName = cus.FirstName
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= cAsc.Count; ii++)
+                                                {
+                                                    var line = cAsc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.FirstName}, {line.Name}, {line.Cost}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "2":
+                                                //insert p desc
+                                                var cDesc = (from cus in dbContext.Customer
+                                                            join oBat in dbContext.OrderBatch on cus.Id equals oBat.CustomerId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.StoreId == stores[stoNum - 1].Id
+                                                            orderby oItem.Cost descending
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                FirstName = cus.FirstName
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= cDesc.Count; ii++)
+                                                {
+                                                    var line = cDesc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.FirstName}, {line.Name}, {line.Cost}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "3":
+                                                //insert date desc
+                                                var dDesc = (from cus in dbContext.Customer
+                                                            join oBat in dbContext.OrderBatch on cus.Id equals oBat.CustomerId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.StoreId == stores[stoNum - 1].Id
+                                                            orderby oBat.TimePlaced descending
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                FirstName = cus.FirstName
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= dDesc.Count; ii++)
+                                                {
+                                                    var line = dDesc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.FirstName}, {line.Name}, {line.Cost}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "4":
+                                                //insert date asc
+                                                var dAsc = (from cus in dbContext.Customer
+                                                            join oBat in dbContext.OrderBatch on cus.Id equals oBat.CustomerId
+                                                            join oItem in dbContext.OrderItem on oBat.Id equals oItem.BatchId
+                                                            where oBat.StoreId == stores[stoNum - 1].Id
+                                                            orderby oBat.TimePlaced
+                                                            select new
+                                                            {
+                                                                Name = oItem.Name,
+                                                                Cost = oItem.Cost,
+                                                                Time = oBat.TimePlaced,
+                                                                FirstName = cus.FirstName
+                                                            }).ToList();
+                                                for (int ii = 1; ii <= dAsc.Count; ii++)
+                                                {
+                                                    var line = dAsc[ii - 1];
+                                                    Console.WriteLine($"{ii}. {line.FirstName}, {line.Name}, {line.Cost}, {line.Time} ");
+                                                }
+                                                Console.WriteLine("Press Enter to continue");
+                                                Console.ReadLine();
+                                                break;
+                                            case "b":
+                                                goto OrderMenu;
+                                            default:
+                                                Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                                Console.ReadLine();
+                                                goto OrderStore;
+                                        }
+                                    }
+                                    else if (input == "b")
+                                    {
+                                        goto OrderMenu;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Choice. Please press enter and try again");
+                                        Console.ReadLine();
+                                    }
+                                }
                                 break;
                             case "b":
                                 goto MainMenu;
@@ -876,6 +1318,30 @@ namespace ComputerStore.ui
                         break;
                     case "4":
                         //insert Statistics
+                        Console.WriteLine("Biggest Spender:");
+                        var priceSearch = (from order in dbContext.OrderItem
+                                           join batch in dbContext.OrderBatch on order.BatchId equals batch.Id
+                                           join custom in dbContext.Customer on batch.CustomerId equals custom.Id
+                                           group order by custom.FirstName into g
+                                           select new
+                                           {
+                                               Name = g.Key,
+                                               Sum = g.Sum(order => order.Cost)
+                                           }).ToList().Last();
+                        Console.WriteLine($"{priceSearch.Name}, ${priceSearch.Sum}");
+                        Console.WriteLine("\nBest performing store: ");
+                        var storeSearch = (from order in dbContext.OrderItem
+                                           join batch in dbContext.OrderBatch on order.BatchId equals batch.Id
+                                           join store in dbContext.Store on batch.StoreId equals store.Id
+                                           group order by store.Name into g
+                                           select new
+                                           {
+                                               Name = g.Key,
+                                               Sum = g.Sum(order => order.Cost)
+                                           }).ToList().Last();
+                        Console.WriteLine($"{storeSearch.Name}, ${storeSearch.Sum}");
+                        Console.WriteLine("Press enter to continue");
+                        Console.ReadLine();
                         break;
                     case "q":
                         goto exit;

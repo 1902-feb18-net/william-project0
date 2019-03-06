@@ -38,5 +38,10 @@ namespace ComputerStore.Library
                 _quantity = value;
             }
         }
+
+        public bool CheckAvail(int quantity)
+        {
+            return _quantity - quantity >= 0;
+        }
     }
 }
