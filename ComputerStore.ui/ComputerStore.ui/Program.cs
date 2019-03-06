@@ -2,6 +2,7 @@
 using ComputerStore.Library;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace ComputerStore.ui
 {
     class Program
     {
-      // public static readonly LoggerFactory AppLoggerFactory =
-      //     new LoggerFactory(new[] {new ConsoleLoggerProvider((_,__) => true,true) });
+       public static readonly LoggerFactory AppLoggerFactory =
+#pragma warning disable CS0618 // Type or member is obsolete
+           new LoggerFactory(new[] {new ConsoleLoggerProvider((_,__) => true,true) });
+#pragma warning restore CS0618 // Type or member is obsolete
         static void Main(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<CSC.Project0Context>();
@@ -964,7 +967,7 @@ namespace ComputerStore.ui
                                                     Console.WriteLine("Invalid input. Press enter to continue");
                                                     Console.ReadLine();
                                                 }
-                                                else if (!inventoryUp.CheckAvail(invSearch[0].Quantity))
+                                                else if (!inventoryUp.CheckAvail((int)num))
                                                 {
                                                     Console.WriteLine("Not enough iventory available. Press enter to continue");
                                                     Console.ReadLine();
@@ -974,7 +977,7 @@ namespace ComputerStore.ui
                                                 {
                                                     try
                                                     {
-                                                        orderItemAdd.Quantity = (int)num;
+                                                        orderItemAdd.Quantity = invSearch[0].Quantity - (int)num;
                                                     }
                                                     catch (ArgumentException ex)
                                                     {
@@ -1182,6 +1185,7 @@ namespace ComputerStore.ui
                                 }
                                 while(stores.Count > 0)
                                 {
+                                    Console.Clear();
                                     for (int ii = 1; ii <= stores.Count; ii++)
                                     {
                                         var store = stores[ii - 1];
@@ -1318,6 +1322,7 @@ namespace ComputerStore.ui
                         break;
                     case "4":
                         //insert Statistics
+                        Console.Clear();
                         Console.WriteLine("Biggest Spender:");
                         var priceSearch = (from order in dbContext.OrderItem
                                            join batch in dbContext.OrderBatch on order.BatchId equals batch.Id

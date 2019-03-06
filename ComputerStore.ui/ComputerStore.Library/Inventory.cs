@@ -39,9 +39,9 @@ namespace ComputerStore.Library
             }
         }
 
-        public bool CheckAvail(int quantity)
+        public bool CheckAvail(int value)
         {
-            return _quantity - quantity >= 0;
+            return _quantity - value >= 0;
         }
     }
 }
