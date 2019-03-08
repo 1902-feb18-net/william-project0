@@ -977,14 +977,14 @@ namespace ComputerStore.ui
                                                 {
                                                     try
                                                     {
-                                                        orderItemAdd.Quantity = invSearch[0].Quantity - (int)num;
+                                                        orderItemAdd.Quantity = (int)num;
                                                     }
                                                     catch (ArgumentException ex)
                                                     {
                                                         Console.WriteLine(ex.Message);
                                                     }
                                                     //inventory update
-                                                    inventoryUp.Id = invSearch[0].ID;
+                                                    inventoryUp.Id = invSearch[0].Quantity - (int)num;
                                                     inventoryUp.Quantity -= (int)num;
                                                     inventoryUp.StoreId = invSearch[0].StoreID;
                                                     inventoryUp.SubProductId = invSearch[0].SubProductID;

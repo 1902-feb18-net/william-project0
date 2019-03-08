@@ -8,9 +8,6 @@ select * from OrderBatch
 select * from OrderItem
 select * from Inventory
 
-delete from Customer where ID > 0
-delete from Product where ID > 0
-delete from OrderBatch where ID = 5
 --insert testing data
 insert into Store (Name) values
 	('Amazon'),
@@ -53,11 +50,11 @@ insert into ProductGroup (ProductID, SubProductID) values
 	(14,9),
 	(15,10)
 
-insert into OrderBatch (CustomerID,StoreID) values
-	(4,6)
+insert into OrderBatch (ID,CustomerID,StoreID) values
+	(1,4,6)
 
-insert into OrderItem (BatchID, ProductID, Name, Quantity, Cost) values
-	(1, 4,'Combo A', 1, 450)
+insert into OrderItem (ID,BatchID, ProductID, Name, Quantity, Cost) values
+	(1,1, 4,'Combo A', 1, 450)
 
 -- Adds store location
 create table Store (
@@ -106,8 +103,9 @@ create table Inventory (
 )
 
 -- Adds Order and Links Customer to Location
+drop table OrderBatch
 create table OrderBatch (
-	ID int not null primary key identity,
+	ID int not null primary key,
 	CustomerID int not null foreign key references Customer (ID),
 	StoreID int not null foreign key references Store (ID),
 	TimePlaced datetime2 not null default(getdate())
