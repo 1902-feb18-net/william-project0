@@ -95,13 +95,22 @@ namespace ComputerStoreWeb.App.Controllers
         public ActionResult Edit(int id)
         {
             Lib.Customer libCustomer = Repo.GetCustomerById(id);
-            return View(libCustomer);
+            CustomerModel webCustomer = new CustomerModel
+            {
+                Id = libCustomer.ID,
+                FirstName = libCustomer.FirstName,
+                LastName = libCustomer.LastName,
+                Address = libCustomer.Address,
+                PhoneNumber = libCustomer.PhoneNumber,
+                StoreId = libCustomer.StoreId
+            };
+            return View(webCustomer);
         }
 
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Customer customer)
+        public ActionResult Edit(int id, CustomerModel customer)
         {
             try
             {

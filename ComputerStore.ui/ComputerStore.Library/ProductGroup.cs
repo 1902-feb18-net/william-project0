@@ -6,11 +6,11 @@ namespace ComputerStore.Library
 {
     public class ProductGroup
     {
-        private int? _productId;
-        private int? _subProductId;
+        private int _productId;
+        private int _subProductId;
 
         public int Id { get; set; }
-        public int? ProductId
+        public int ProductId
         {
             get => _productId;
             set
@@ -19,7 +19,7 @@ namespace ComputerStore.Library
             }
         }
 
-        public int? SubProductId
+        public int SubProductId
         {
             get => _subProductId;
             set
