@@ -15,7 +15,7 @@ namespace ComputerStore.Library
     public class OrderItem
     {
         private int _batchId;
-        private int? _productId;
+        private int _productId;
         private int _quantity;
         private string _name;
         private decimal _cost;
@@ -31,7 +31,7 @@ namespace ComputerStore.Library
             }
         }
 
-        public int? ProductId
+        public int ProductId
         {
             get => _productId;
             set

@@ -6,12 +6,14 @@ namespace ComputerStore.Library
 {
     public interface IComputerStoreRepository
     {
-        IEnumerable<Store> GetStores();
+        IEnumerable<Store> GetStores(string search);
+        Store GetStoreById(int id);
         void AddStore(Store store);
         void DeleteStore(int storeID);
         void UpdateStore(Store store);
 
-        IEnumerable<Customer> GetCustomers();
+        IEnumerable<Customer> GetCustomers(string search);
+        Customer GetCustomerById(int id);
         void AddCustomer(Customer customer);
         void DeleteCustomer(int customerID);
         void UpdateCustomer(Customer customer);
@@ -22,11 +24,15 @@ namespace ComputerStore.Library
         void UpdateProduct(Product product);
 
         IEnumerable<OrderItem> GetOrders();
+        IEnumerable<OrderItem> GetOrdersByBatch(int batchId);
+        OrderItem GetOrderById(int Id);
         void AddOrder(OrderItem order);
         void DeleteOrder(int orderID);
         void UpdateOrder(OrderItem order);
 
         IEnumerable<OrderBatch> GetOrderBatches();
+        IEnumerable<OrderBatch> GetOrderBatchesByCustomer(int customerId);
+        IEnumerable<OrderBatch> GetOrderBatchesByStore(int storeId);
         void AddOrderBatch(OrderBatch orderBatch);
         void DeleteOrderBatch(int orderBatchID);
         void UpdateOrderBatch(OrderBatch orderBatch);

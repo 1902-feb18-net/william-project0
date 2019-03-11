@@ -14,7 +14,7 @@ namespace ComputerStore.Context
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Address = customer.Address,
-            PhoneNumber = customer.PhoneNumber
+            PhoneNumber = customer.PhoneNumber,
         };
 
         public static Customer Map(Library.Customer customer) => new Customer
@@ -24,7 +24,7 @@ namespace ComputerStore.Context
             FirstName = customer.FirstName,
             LastName = customer.LastName,
             Address = customer.Address,
-            PhoneNumber = customer.PhoneNumber
+            PhoneNumber = customer.PhoneNumber,
         };
 
         public static IEnumerable<Library.Customer> Map(IEnumerable<Customer> customers) => customers.Select(Map);
@@ -126,7 +126,8 @@ namespace ComputerStore.Context
             Id = orderBatch.Id,
             StoreId = orderBatch.StoreId,
             CustomerId = orderBatch.CustomerId,
-            Date = orderBatch.TimePlaced
+            Date = orderBatch.TimePlaced,
+            Items = Map(orderBatch.OrderItem).ToList()
         };
 
         public static OrderBatch Map(Library.OrderBatch orderBatch) => new OrderBatch
@@ -134,7 +135,8 @@ namespace ComputerStore.Context
             Id = orderBatch.Id,
             StoreId = orderBatch.StoreId,
             CustomerId = orderBatch.CustomerId,
-            TimePlaced = orderBatch.Date
+            TimePlaced = orderBatch.Date,
+            OrderItem = Map(orderBatch.Items).ToList()
         };
 
         public static IEnumerable<Library.OrderBatch> Map(IEnumerable<OrderBatch> batches) => batches.Select(Map);

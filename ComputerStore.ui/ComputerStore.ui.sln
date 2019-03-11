@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerStore.Test", "Compu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerStore.Context", "ComputerStore.Context\ComputerStore.Context.csproj", "{E6179E0B-9A32-457F-B705-893D61555897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerStore.App", "ComputerStore.App\ComputerStore.App.csproj", "{948EE05E-5623-43A3-BADD-9A373B5C6DF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerStoreWeb.App", "ComputerStoreWeb.App\ComputerStoreWeb.App.csproj", "{BCEAA753-2C48-46FE-AD48-D14B6AF5B6F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{E6179E0B-9A32-457F-B705-893D61555897}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6179E0B-9A32-457F-B705-893D61555897}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6179E0B-9A32-457F-B705-893D61555897}.Release|Any CPU.Build.0 = Release|Any CPU
-		{948EE05E-5623-43A3-BADD-9A373B5C6DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{948EE05E-5623-43A3-BADD-9A373B5C6DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{948EE05E-5623-43A3-BADD-9A373B5C6DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{948EE05E-5623-43A3-BADD-9A373B5C6DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCEAA753-2C48-46FE-AD48-D14B6AF5B6F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCEAA753-2C48-46FE-AD48-D14B6AF5B6F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCEAA753-2C48-46FE-AD48-D14B6AF5B6F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCEAA753-2C48-46FE-AD48-D14B6AF5B6F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

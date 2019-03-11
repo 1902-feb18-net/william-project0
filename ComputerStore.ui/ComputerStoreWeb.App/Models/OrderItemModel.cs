@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ComputerStore.Context
+namespace ComputerStoreWeb.App.Models
 {
-    public partial class OrderItem
+    public class OrderItemModel
     {
         public int Id { get; set; }
         public int BatchId { get; set; }
@@ -12,7 +14,5 @@ namespace ComputerStore.Context
         public string Name { get; set; }
         public decimal Cost { get; set; }
 
-        public virtual OrderBatch Batch { get; set; }
-        public virtual Product Product { get; set; }
     }
 }

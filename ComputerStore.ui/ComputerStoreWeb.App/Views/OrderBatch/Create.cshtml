@@ -1,0 +1,80 @@
+﻿@model ComputerStore.Library.OrderBatch
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Order</h1>
+
+<p>
+    Add Navigation here
+</p>
+
+<h4>Cart</h4>
+<p>
+    <a asp-controller="Product" asp-action="Index">Add Item</a>
+</p>
+@*@if (Model.Items.Any()) { 
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Cost)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cost)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}*@
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input asp-for="StoreId" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input asp-for="CustomerId" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="CheckOut" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    @* I cant get it to properly let me go back to customer details, throws null exception
+        <a asp-controller="Customer" asp-action="Details" asp-route-id="@Model.CustomerId">Back</a>*@
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

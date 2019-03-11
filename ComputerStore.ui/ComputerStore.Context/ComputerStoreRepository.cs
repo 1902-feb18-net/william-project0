@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ComputerStore.Library;
 using Microsoft.EntityFrameworkCore;
@@ -98,41 +99,93 @@ namespace ComputerStore.Context
         }
 
         //Gets
-        public IEnumerable<Library.Customer> GetCustomers()
+            //Customer
+        public IEnumerable<Library.Customer> GetCustomers(string search = null)
         {
-            return Mapper.Map(_db.Customer.AsNoTracking());
+            if (search == null)
+            {
+                return Mapper.Map(_db.Customer.AsNoTracking());
+            }
+            else
+            {
+                return Mapper.Map(_db.Customer.AsNoTracking().Where(c => c.FirstName.Contains(search)));
+            }
         }
 
+        public Library.Customer GetCustomerById(int id)
+        {
+            return Mapper.Map(_db.Customer.AsNoTracking().First(c => c.Id == id));
+        }
+
+            //OrderItem
         public IEnumerable<Library.OrderItem> GetOrders()
         {
             return Mapper.Map(_db.OrderItem.AsNoTracking());
         }
 
+        public IEnumerable<Library.OrderItem> GetOrdersByBatch(int batchId)
+        {
+            return Mapper.Map(_db.OrderItem.AsNoTracking().Where(o => o.BatchId == batchId));
+        }
+
+        public Library.OrderItem GetOrderById(int Id)
+        {
+            return Mapper.Map(_db.OrderItem.AsNoTracking().First(o => o.Id == Id));
+        }
+
+            //Product
         public IEnumerable<Library.Product> GetProducts()
         {
             return Mapper.Map(_db.Product.AsNoTracking());
         }
 
-        public IEnumerable<Library.Store> GetStores()
+            //Store
+        public IEnumerable<Library.Store> GetStores(string search = null)
         {
-            return Mapper.Map(_db.Store.AsNoTracking());
+            if (search == null)
+            {
+                return Mapper.Map(_db.Store.AsNoTracking());
+            }
+            else
+            {
+                return Mapper.Map(_db.Store.AsNoTracking().Where(s => s.Name.Contains(search)));
+            }
         }
 
+        public Library.Store GetStoreById(int id)
+        {
+            return Mapper.Map(_db.Store.AsNoTracking().First(s => s.Id == id));
+        }
+
+            //Inventory
         public IEnumerable<Library.Inventory> GetInventories()
         {
             return Mapper.Map(_db.Inventory.AsNoTracking());
         }
 
+            //OrderBatch
         public IEnumerable<Library.OrderBatch> GetOrderBatches()
         {
             return Mapper.Map(_db.OrderBatch.AsNoTracking());
         }
 
+        public IEnumerable<Library.OrderBatch> GetOrderBatchesByCustomer(int customerId)
+        {
+            return Mapper.Map(_db.OrderBatch.AsNoTracking().Where(b => b.CustomerId == customerId)).OrderByDescending(o => o.Date);
+        }
+
+        public IEnumerable<Library.OrderBatch> GetOrderBatchesByStore(int storeId)
+        {
+            return Mapper.Map(_db.OrderBatch.AsNoTracking().Where(b => b.StoreId == storeId).OrderByDescending(o => o.TimePlaced));
+        }
+
+            //ProductGroup
         public IEnumerable<Library.ProductGroup> GetProductGroups()
         {
             return Mapper.Map(_db.ProductGroup.AsNoTracking());
         }
 
+            //SubProduct
         public IEnumerable<Library.SubProduct> GetSubProducts()
         {
             return Mapper.Map(_db.SubProduct.AsNoTracking());

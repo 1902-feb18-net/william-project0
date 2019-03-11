@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ComputerStoreWeb.App.Models.OrderBatchModel>
+
+@{
+    ViewData["Title"] = "Store Orders";
+}
+
+<h1>Store Orders</h1>
+
+<p>
+    <a asp-controller="Store" asp-action="Index">Back</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "StoreIndex", "OrderItem", new { batchId = item.Id }, null)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

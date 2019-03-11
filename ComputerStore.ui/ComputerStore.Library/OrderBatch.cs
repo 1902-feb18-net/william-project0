@@ -38,5 +38,7 @@ namespace ComputerStore.Library
                 _date = value;
             }
         }
+
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
 }
