@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ComputerStore.Context;
+using ComputerStoreWeb.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -29,8 +30,15 @@ namespace ComputerStoreWeb.App.Controllers
         public ActionResult Details(int id)
         {
             Lib.Store libStore = Repo.GetStoreById(id);
+            StoreModel webStore = new StoreModel
+            {
+                Id = libStore.Id,
+                Name = libStore.Name,
+                Address = libStore.Address,
+                inventories = Repo.GetInventoriesByStore(id)
+            };
             
-            return View(libStore);
+            return View(webStore);
         }
 
         // GET: Store/Create

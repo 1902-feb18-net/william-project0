@@ -47,13 +47,23 @@ namespace ComputerStoreWeb.App.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(ProductModel product)
         {
             try
             {
                 // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    Repo.AddProduct(new Lib.Product
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Cost = product.Cost
+                    });
+                    Repo.Save();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View();
             }
             catch
             {

@@ -19,37 +19,34 @@ namespace ComputerStoreWeb.App.Controllers
             Repo = repo;
         }
 
-        
 
         public IActionResult Index()
         {
-            // I just wanted to get the Customer Id and Total spent by them...
-            //var spend = Repo.GetOrders().Join(Repo.GetOrderBatches(),
-            //                                    o => o.BatchId,
-            //                                    b => b.Id,
-            //                                    (o,b) => new { Cost = o.Cost, Id = b.CustomerId })
-            //                             .OrderBy(g => g.Cost )
-            //                             .GroupBy(g => g.Id)
-            //                             .Last();
-            //var spender = Repo.GetCustomerById();
-            //var spend = (from oB in Repo.GetOrderBatches()
-            //             join oI in Repo.GetOrders() on oB.Id equals oI.BatchId
-            //             join c in Repo.GetCustomers("") on oB.CustomerId equals c.ID
+
+            //var spend = (from oB in _db.OrderBatch
+            //             join oI in _db.OrderItem on oB.Id equals oI.BatchId
+            //             join c in _db.Customer on oB.CustomerId equals c.Id
             //             group oI by c.FirstName into g
             //             select new
             //             {
             //                 Name = g.Key,
             //                 Sum = g.Sum(s => s.Cost)
             //             }).ToList().Last();
-            //var store = (from oB in Repo.GetOrderBatches()
-            //             join oI in Repo.GetOrders() on oB.Id equals oI.BatchId
-            //             join s in Repo.GetStores("") on oB.StoreId equals s.Id
+            //var store = (from oB in _db.OrderBatch
+            //             join oI in _db.OrderItem on oB.Id equals oI.BatchId
+            //             join s in _db.Store on oB.StoreId equals s.Id
             //             group oI by s.Name into g
             //             select new
             //             {
             //                 Name = g.Key,
             //                 Sum = g.Sum(s => s.Cost)
             //             }).ToList().Last();
+            var n1product = Repo.GetOrders().OrderByDescending(o => o.Quantity).GroupBy(o => o.Name).First();
+            var total = n1product.Where(o => o.Name == n1product.First().Name).Sum(o => o.Quantity);
+           // ViewBag.N1proId = n1product.Name;
+            
+            ViewBag.Name = n1product.First().Name;
+            ViewBag.Total = total;
             ViewBag.Hello = "Hello";
             return View();
         }

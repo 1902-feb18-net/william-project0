@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lib = ComputerStore.Library;
 using Con = ComputerStore.Context;
+using ComputerStoreWeb.App.Models;
+
 namespace ComputerStoreWeb.App.Controllers
 {
     public class CustomerController : Controller
     {
         public Lib.IComputerStoreRepository Repo { get; }
+
 
         public CustomerController(Lib.IComputerStoreRepository repo)
         {
@@ -22,14 +25,35 @@ namespace ComputerStoreWeb.App.Controllers
         public ActionResult Index([FromQuery]string search = "")
         {
             IEnumerable<Lib.Customer> libCustomers = Repo.GetCustomers(search);
-            return View(libCustomers);
+            IEnumerable<CustomerModel> webCustomers = libCustomers.Select(x => new CustomerModel
+            {
+                Id = x.ID,
+                StoreId = x.StoreId,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Address = x.Address,
+                PhoneNumber = x.PhoneNumber
+            });
+            
+            return View(webCustomers);
         }
 
         // GET: Customer/Details/5
         public ActionResult Details(int id)
         {
             Lib.Customer libCustomer = Repo.GetCustomerById(id);
-            return View(libCustomer);
+            CustomerModel webCustomer = new CustomerModel
+            {
+                Id = libCustomer.ID,
+                StoreId = libCustomer.StoreId,
+                FirstName = libCustomer.FirstName,
+                LastName = libCustomer.LastName,
+                Address = libCustomer.Address,
+                PhoneNumber = libCustomer.PhoneNumber,
+                Store = Repo.GetStoreById(libCustomer.StoreId),
+                OrderBatches = Repo.GetOrderBatchesByCustomer(libCustomer.ID).OrderByDescending(o => o.Date)
+            };
+            return View(webCustomer);
         }
 
         // GET: Customer/Create

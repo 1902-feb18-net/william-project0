@@ -101,21 +101,24 @@ namespace ComputerStoreWeb.App.Controllers
                     Repo.AddOrder(new Lib.OrderItem
                     {
                         Id = orderItem.Id,
-                        BatchId = (int)TempData["OrderBatchId"],
+                        BatchId = orderItem.BatchId,
                         ProductId = orderItem.ProductId,
                         Name = orderItem.Name,
                         Quantity = orderItem.Quantity,
                         Cost = orderItem.Cost
                     });
-                    TempData["addToCart"] = orderItem;
-
                     return RedirectToAction(nameof(Index));
                 }
+                ViewBag.Id = orderItem.Id;
+                ViewBag.BatchId = orderItem.BatchId;
+                ViewBag.ProductId = orderItem.ProductId;
+                ViewBag.Name = orderItem.Name;
+                ViewBag.Cost = orderItem.Cost;
                 return View(orderItem);
             }
             catch
             {
-                return View();
+                return View(orderItem);
             }
         }
 

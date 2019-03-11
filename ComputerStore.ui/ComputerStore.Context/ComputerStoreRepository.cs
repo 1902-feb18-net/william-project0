@@ -163,6 +163,11 @@ namespace ComputerStore.Context
             return Mapper.Map(_db.Inventory.AsNoTracking());
         }
 
+        public IEnumerable<Library.Inventory> GetInventoriesByStore(int Id)
+        {
+            return Mapper.Map(_db.Inventory.AsNoTracking().Where(i => i.StoreId == Id));
+        }
+
             //OrderBatch
         public IEnumerable<Library.OrderBatch> GetOrderBatches()
         {

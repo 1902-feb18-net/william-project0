@@ -38,6 +38,7 @@ namespace ComputerStore.Library
         void UpdateOrderBatch(OrderBatch orderBatch);
 
         IEnumerable<Inventory> GetInventories();
+        IEnumerable<Inventory> GetInventoriesByStore(int Id);
         void AddInventory(Inventory inventory);
         void DeleteInventory(int inventoryID);
         void UpdateInventory(Inventory inventory);

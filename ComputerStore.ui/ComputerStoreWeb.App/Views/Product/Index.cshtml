@@ -30,7 +30,7 @@
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { Id=item.Id}) |
-                @Html.ActionLink("Add","Create","OrderItem", new {productId=item.Id,Name=item.Name,Cost=item.Cost },null)
+                @Html.ActionLink("Add","Create","OrderItem", new {Name = item.Name, Cost = item.Cost, productId = item.Id },null)
             </td>
         </tr>
 }

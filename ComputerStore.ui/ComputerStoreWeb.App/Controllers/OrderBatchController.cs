@@ -77,10 +77,10 @@ namespace ComputerStoreWeb.App.Controllers
                         Date = DateTime.Now
                         
                     });
-                    TempData["OrderBatchId"] = orderBatch.Id;
-                    return RedirectToAction(nameof(Index));
+                    Repo.Save();
+                    return RedirectToAction(nameof(Index),new { customerId = orderBatch.CustomerId });
                 }
-                return View(orderBatch);
+                return View();
             }
             catch
             {
@@ -133,5 +133,6 @@ namespace ComputerStoreWeb.App.Controllers
                 return View();
             }
         }
+
     }
 }
