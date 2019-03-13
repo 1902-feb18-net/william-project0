@@ -14,7 +14,7 @@
 </div>
 <p>
     <a asp-action="Create">Create New</a> | 
-    <a asp-controller="Home" asp-action="Index">Back</a>
+    <a asp-controller="Home" asp-action="Index">Back</a> 
 </p>
 <table class="table">
     <thead>
@@ -59,7 +59,7 @@
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id=item.Id }) |
-                @Html.ActionLink("Order", "Create", "OrderBatch", new { customerId=item.Id, storeId = item.StoreId},null)
+                @Html.ActionLink("Order", "Index", "Order", new { Id=item.Id, storeId = item.StoreId},null)
             </td>
         </tr>
 }

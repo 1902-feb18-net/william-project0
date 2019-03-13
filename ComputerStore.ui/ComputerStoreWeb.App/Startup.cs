@@ -38,6 +38,7 @@ namespace ComputerStoreWeb.App
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMemoryCache();
 
             services.AddScoped<IComputerStoreRepository, ComputerStoreRepository>();
         }

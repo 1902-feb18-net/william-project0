@@ -7,6 +7,7 @@ using ComputerStoreWeb.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Lib = ComputerStore.Library;
 
 namespace ComputerStoreWeb.App.Controllers
@@ -15,9 +16,12 @@ namespace ComputerStoreWeb.App.Controllers
     {
         public Lib.IComputerStoreRepository Repo { get; }
 
-        public StoreController(Lib.IComputerStoreRepository repo)
+        private readonly ILogger<StoreController> _logger;
+
+        public StoreController(Lib.IComputerStoreRepository repo, ILogger<StoreController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
         // GET: Store
         public ActionResult Index([FromQuery]string search = "")

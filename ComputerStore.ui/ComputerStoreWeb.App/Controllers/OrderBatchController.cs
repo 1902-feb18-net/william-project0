@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ComputerStoreWeb.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Lib = ComputerStore.Library;
 
 namespace ComputerStoreWeb.App.Controllers
@@ -13,9 +14,12 @@ namespace ComputerStoreWeb.App.Controllers
     {
         public Lib.IComputerStoreRepository Repo { get; }
 
-        public OrderBatchController(Lib.IComputerStoreRepository repo)
+        private readonly ILogger<OrderBatchController> _logger;
+
+        public OrderBatchController(Lib.IComputerStoreRepository repo, ILogger<OrderBatchController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: OrderBatch
@@ -30,6 +34,7 @@ namespace ComputerStoreWeb.App.Controllers
                 Date = x.Date,
                 Items = x.Items.Select(y => new OrderItemModel())
             });
+            
             return View(webOrder);
         }
 

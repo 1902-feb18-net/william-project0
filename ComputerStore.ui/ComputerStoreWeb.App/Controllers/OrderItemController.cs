@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ComputerStoreWeb.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Lib = ComputerStore.Library;
 
 namespace ComputerStoreWeb.App.Controllers
@@ -13,9 +14,12 @@ namespace ComputerStoreWeb.App.Controllers
     {
         public Lib.IComputerStoreRepository Repo { get; }
 
-        public OrderItemController(Lib.IComputerStoreRepository repo)
+        private readonly ILogger<OrderItemController> _logger;
+
+        public OrderItemController(Lib.IComputerStoreRepository repo, ILogger<OrderItemController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: OrderItem
@@ -83,37 +87,47 @@ namespace ComputerStoreWeb.App.Controllers
         }
 
         // GET: OrderItem/Create
-        public ActionResult Create()
+        public ActionResult Create(OrderBatchModel order)
         {
-            return View();
+            var viewModel = new OrderItemModel
+            {
+                Products = Repo.GetProducts(),
+                BatchId = order.Id,
+            };
+            return View(viewModel);
         }
 
         // POST: OrderItem/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(OrderItemModel orderItem)
+        public ActionResult Create(OrderItemModel orderItem, int? garbage)
         {
+            orderItem.Products = Repo.GetProducts();
+            
             try
             {
                 // TODO: Add insert logic here
                 if (ModelState.IsValid)
                 {
-                    Repo.AddOrder(new Lib.OrderItem
-                    {
-                        Id = orderItem.Id,
-                        BatchId = orderItem.BatchId,
-                        ProductId = orderItem.ProductId,
-                        Name = orderItem.Name,
-                        Quantity = orderItem.Quantity,
-                        Cost = orderItem.Cost
-                    });
-                    return RedirectToAction(nameof(Index));
+                    //Lib.OrderItem temp = new Lib.OrderItem
+                    //{
+                    //    BatchId = orderItem.BatchId,
+                    //    ProductId = orderItem.ProductId,
+                    //    Name = orderItem.Products.Where(p => p.Id == orderItem.ProductId).First().Name,
+                    //    Quantity = orderItem.Quantity,
+                    //    Cost = orderItem.Products.Where(p => p.Id == orderItem.ProductId).First().Cost * orderItem.Quantity
+                    //};
+                    TempData["ItemBatch"] = orderItem.BatchId;
+                    TempData["ItemProduct"] = orderItem.ProductId;
+                    TempData["ItemName"] = orderItem.Products.Where(p => p.Id == orderItem.ProductId).First().Name;
+                    TempData["ItemQuantity"] = orderItem.Quantity;
+                    TempData["ItemCost"] = orderItem.Products.Where(p => p.Id == orderItem.ProductId).First().Cost * orderItem.Quantity;
+                    TempData.Keep();
+                    //Repo.AddOrder(temp);
+
+                    return RedirectToAction("WorkingIndex","Order",TempData);
                 }
-                ViewBag.Id = orderItem.Id;
-                ViewBag.BatchId = orderItem.BatchId;
-                ViewBag.ProductId = orderItem.ProductId;
-                ViewBag.Name = orderItem.Name;
-                ViewBag.Cost = orderItem.Cost;
+
                 return View(orderItem);
             }
             catch

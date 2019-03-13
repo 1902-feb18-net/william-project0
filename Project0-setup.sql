@@ -51,7 +51,7 @@ insert into ProductGroup (ProductID, SubProductID) values
 	(15,10)
 
 insert into OrderBatch (ID,CustomerID,StoreID) values
-	(1,4,6)
+	(28,6,3)
 
 insert into OrderItem (ID,BatchID, ProductID, Name, Quantity, Cost) values
 	(1,1, 4,'Combo A', 1, 450)

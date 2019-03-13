@@ -6,6 +6,9 @@ namespace ComputerStore.Library
 {
     public interface IComputerStoreRepository
     {
+         IEnumerable<OrderBatch> GetLocal();
+
+
         IEnumerable<Store> GetStores(string search);
         Store GetStoreById(int id);
         void AddStore(Store store);
@@ -33,6 +36,7 @@ namespace ComputerStore.Library
         IEnumerable<OrderBatch> GetOrderBatches();
         IEnumerable<OrderBatch> GetOrderBatchesByCustomer(int customerId);
         IEnumerable<OrderBatch> GetOrderBatchesByStore(int storeId);
+        OrderBatch GetOrderBatchById(int Id);
         void AddOrderBatch(OrderBatch orderBatch);
         void DeleteOrderBatch(int orderBatchID);
         void UpdateOrderBatch(OrderBatch orderBatch);

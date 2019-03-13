@@ -16,6 +16,12 @@ namespace ComputerStore.Context
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
+        //debug
+        public IEnumerable<Library.OrderBatch> GetLocal()
+        {
+            return Mapper.Map(_db.OrderBatch.Local.ToList());
+        }
+
         //Adds
         public void AddCustomer(Library.Customer customer)
         {
@@ -182,6 +188,11 @@ namespace ComputerStore.Context
         public IEnumerable<Library.OrderBatch> GetOrderBatchesByStore(int storeId)
         {
             return Mapper.Map(_db.OrderBatch.AsNoTracking().Where(b => b.StoreId == storeId).OrderByDescending(o => o.TimePlaced));
+        }
+
+        public Library.OrderBatch GetOrderBatchById(int Id)
+        {
+            return Mapper.Map(_db.OrderBatch.AsNoTracking().Where(b => b.Id == Id)).First();
         }
 
             //ProductGroup

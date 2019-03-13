@@ -1,0 +1,21 @@
+﻿@model ComputerStoreWeb.App.Models.OrderModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Order</h1>
+
+<div>
+    <h4>Cart</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<p>
+    @*<a asp-controller="OrderItem" asp-action="Create">Add</a>*@
+    @Html.ActionLink("Add","Create","OrderItem", new OrderBatchModel{ Id = Model.OrderBatch.Id, Date = Model.OrderBatch.Date },null)
+    
+</p>
+
+
