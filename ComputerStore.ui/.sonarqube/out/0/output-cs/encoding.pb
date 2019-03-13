@@ -1,0 +1,10 @@
+X
+OC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Customer.csutf-8h
+_C:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\IComputerStoreRepository.csutf-8Y
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Inventory.csutf-8Z
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\OrderBatch.csutf-8Y
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\OrderItem.csutf-8W
+NC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Product.csutf-8\
+SC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\ProductGroup.csutf-8U
+LC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Store.csutf-8Z
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\SubProduct.csutf-8

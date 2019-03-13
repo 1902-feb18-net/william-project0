@@ -1,0 +1,12 @@
+Q
+OC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Customer.csa
+_C:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\IComputerStoreRepository.csR
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Inventory.csS
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\OrderBatch.csR
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\OrderItem.csP
+NC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Product.csU
+SC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\ProductGroup.csN
+LC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\Store.csS
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\SubProduct.csT
+PC:\Users\billy\AppData\Local\Temp\.NETCoreApp,Version=v2.2.AssemblyAttributes.csÜ
+ÅC:\revature\william-project0\ComputerStore.ui\ComputerStore.Library\obj\Debug\netcoreapp2.2\ComputerStore.Library.AssemblyInfo.cs

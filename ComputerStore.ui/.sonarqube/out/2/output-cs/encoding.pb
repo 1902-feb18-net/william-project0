@@ -1,0 +1,12 @@
+g
+^C:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\ComputerStoreRepository.csutf-8X
+OC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Customer.csutf-8Y
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Inventory.csutf-8V
+MC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Mapper.csutf-8Z
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\OrderBatch.csutf-8Y
+PC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\OrderItem.csutf-8W
+NC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Product.csutf-8\
+SC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\ProductGroup.csutf-8_
+VC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Project0Context.csutf-8U
+LC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\Store.csutf-8Z
+QC:\revature\william-project0\ComputerStore.ui\ComputerStore.Context\SubProduct.csutf-8
